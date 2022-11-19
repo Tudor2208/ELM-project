@@ -4,6 +4,7 @@ import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (class, style)
 import Model.Date as Date exposing (Date, Month)
 import Model.Util exposing (chainCompare)
+import Model.Date
 
 
 type Interval
@@ -96,11 +97,55 @@ If the `start` field is equal, the they are compare by the `end` fields:
 -}
 compare : Interval -> Interval -> Order
 compare (Interval intA) (Interval intB) =
-     EQ
+    let
+        startA = intA.start
+        endA = intA.end
+        startB = intB.start
+        endB = intB.end
+    in
+        case Model.Date.compare startA startB of
+            LT -> LT
+            GT -> GT
+            EQ -> 
+                case endA of
+                    Just a -> 
+                        case endB of
+                            Just b -> Model.Date.compare a b
+                            Nothing -> LT
+                    Nothing -> 
+                        case endB of
+                            Just b -> GT
+                            Nothing -> EQ
+
+
     
 
 
 view : Interval -> Html msg
-view interval =
-     div [] []
-    -- Debug.todo "Implement Model.Interval.view"
+view (Interval interval) =
+     div [class "interval"] [
+        div [class "interval-start"] [
+                case Date.month interval.start of
+                    Just d -> text ("Start: " ++ (String.fromInt (Date.year interval.start)) ++ Date.monthToString(d))
+                    Nothing -> text ""
+                 
+        ], 
+
+        div [class "interval-end"] [
+                case interval.end of
+                    Just i -> 
+                            case Date.month i of
+                                Just d -> text ("End: " ++ (String.fromInt (Date.year i)) ++ Date.monthToString(d))
+                                Nothing -> text ""
+                    Nothing -> text "Present"
+        ],
+
+        div[class "interval-length"] [
+
+            case length (Interval interval) of
+                Just (y, m) -> text ((String.fromInt y) ++ " years, " ++ (String.fromInt m) ++ " months")
+                Nothing -> text ""
+        ]
+
+     ]
+    
