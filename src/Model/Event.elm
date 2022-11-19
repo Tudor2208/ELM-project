@@ -5,7 +5,6 @@ import Html.Attributes exposing (class, classList)
 import Model.Event.Category exposing (EventCategory(..))
 import Model.Interval as Interval exposing (Interval)
 
-
 type alias Event =
     { title : String
     , interval : Interval
@@ -32,12 +31,18 @@ categoryView category =
         Award ->
             text "Award"
 
+sortByWith : (a -> Interval) -> (Interval -> Interval -> Order) -> List a -> List a
+sortByWith accessor sortFunc list =
+    List.sortWith (orderBy accessor sortFunc) list
+
+orderBy : (a -> Interval) -> (Interval -> Interval -> Order) -> a -> a -> Order
+orderBy accessor orderFunc a b =
+        orderFunc (accessor a) (accessor b)
 
 sortByInterval : List Event -> List Event
-sortByInterval events =
-     events
-    -- Debug.todo "Implement Event.sortByInterval"
-
+sortByInterval events = 
+    sortByWith .interval Interval.compare events
+    
 
 view : Event -> Html Never
 view event =
@@ -49,7 +54,9 @@ view event =
 
             case event.url of
                 Just str -> div[class "event-url"] [text str]
-                Nothing -> div[class "event-url"] []   
+                Nothing -> div[class "event-url"] []
+
+            ,div [class "event-interval"] [Interval.view event.interval]       
      ]
 
      else

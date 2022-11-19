@@ -126,7 +126,7 @@ view (Interval interval) =
      div [class "interval"] [
         div [class "interval-start"] [
                 case Date.month interval.start of
-                    Just d -> text ("Start: " ++ (String.fromInt (Date.year interval.start)) ++ Date.monthToString(d))
+                    Just d -> text ("Start: " ++ (String.fromInt (Date.year interval.start)) ++ ", " ++ Date.monthToString(d))
                     Nothing -> text ""
                  
         ], 
@@ -135,7 +135,7 @@ view (Interval interval) =
                 case interval.end of
                     Just i -> 
                             case Date.month i of
-                                Just d -> text ("End: " ++ (String.fromInt (Date.year i)) ++ Date.monthToString(d))
+                                Just d -> text ("End: " ++ (String.fromInt (Date.year i)) ++ ", " ++ Date.monthToString(d))
                                 Nothing -> text ""
                     Nothing -> text "Present"
         ],
