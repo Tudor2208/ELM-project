@@ -97,7 +97,7 @@ If the `start` field is equal, the they are compare by the `end` fields:
 compare : Interval -> Interval -> Order
 compare (Interval intA) (Interval intB) =
      EQ
-    -- Debug.todo "Implement Model.Interval.compare"
+    
 
 
 view : Interval -> Html msg

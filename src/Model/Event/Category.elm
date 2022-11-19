@@ -49,7 +49,7 @@ noneSelected =
 -}
 isEventCategorySelected : EventCategory -> SelectedEventCategories -> Bool
 isEventCategorySelected category current = 
-     False
+     True
     -- Debug.todo "Implement Model.Event.Category.isEventCategorySelected"
 
 

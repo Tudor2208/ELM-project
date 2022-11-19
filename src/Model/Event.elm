@@ -41,7 +41,25 @@ sortByInterval events =
 
 view : Event -> Html Never
 view event =
-     div [] [
-        text "hello"
+     if event.important == False then
+        div [class "event"] [
+            h2[class "event-title"][text event.title],
+            div[class "event-description"] [event.description],
+            div[class "event-category"][categoryView event.category],
+
+            case event.url of
+                Just str -> div[class "event-url"] [text str]
+                Nothing -> div[class "event-url"] []   
      ]
+
+     else
+        div [class "event", class "event-important"] [
+                h2[class "event-title"][text event.title],
+                div[class "event-description"] [event.description],
+                div[class "event-category"][categoryView event.category],
+
+                case event.url of
+                    Just str -> div[class "event-url"] [text str]
+                    Nothing -> div[class "event-url"] []   
+        ]
     

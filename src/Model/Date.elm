@@ -1,6 +1,6 @@
 module Model.Date exposing (Date, Month(..), compare, compareMonth, full, month, monthToString, monthsBetween, monthsBetweenMonths, offsetMonths, onlyYear, view, year)
 
-import Html exposing (Html, text)
+import Html exposing (Html, text, div)
 import Model.Util exposing (chainCompare)
 
 
@@ -55,8 +55,31 @@ The month fields are handled as follows:
 -}
 monthsBetween : Date -> Date -> Maybe Int
 monthsBetween dA dB =
-     Nothing
-    -- Debug.todo "Implement Date.monthsBetween"
+     let
+        yearA = year dA
+        monthA = month dA
+
+        yearB = year dB
+        monthB = month dB
+    in
+
+       case monthA of
+            Just m1 -> 
+                case monthB of 
+                    Just m2 -> 
+                        if yearA == yearB then
+                            Just(abs(monthToInt m1 - monthToInt m2))
+                        else if yearA < yearB then
+                            Just(monthToInt m2 - monthToInt m1 + (yearB - yearA) * 12) 
+                        else
+                            Just(monthToInt m1 - monthToInt m2 + (yearA - yearB) * 12 )
+
+                    Nothing -> Nothing
+
+            Nothing ->  
+                case monthB of
+                    Just m2 -> Nothing
+                    Nothing -> Just(abs(yearA - yearB) * 12)
 
 
 {-| Compares two dates.
@@ -80,10 +103,32 @@ First, dates are compared by the year field. If it's equal, the month fields are
 -}
 compare : Date -> Date -> Order
 compare (Date d1) (Date d2) =
-     EQ
-    -- Debug.todo "Implement Model.Date.compare"
+    let
+        year1 = d1.year
+        month1 = d1.month
 
+        year2 = d2.year
+        month2 = d2.month
+    in 
+        case intcmp year1 year2 of
+            GT -> GT
+            LT -> LT
+            EQ ->
+                case month1 of
+                    Just m1 ->
+                        case month2 of
+                            Just m2 -> intcmp (monthToInt m1) (monthToInt m2)
+                            Nothing -> LT
+                    Nothing ->
+                        case month2 of
+                            Just m2 -> GT
+                            Nothing -> EQ   
 
+intcmp : Int -> Int -> Order
+intcmp a b =
+    if a < b then LT
+        else if a == b then EQ
+            else GT
 {-| Given a current date and the number of months, it returns a new date with the given number of months passed.
 
 -}
@@ -118,8 +163,19 @@ offsetMonths months (Date d) =
 
 view : Date -> Html msg
 view (Date d) =
-     -- div [] []
-     Debug.todo "Implement Model.Date.view"
+      div [] [
+            text (String.fromInt d.year),
+
+            let
+                y = d.year
+                m = d.month
+            in  
+                case m of
+                    Just mo -> text (monthToString mo)
+                    Nothing -> text ""
+
+      ]
+     
 
 
 
@@ -280,5 +336,4 @@ compareMonth m1 m2 =
 -}
 monthsBetweenMonths : Month -> Month -> Int
 monthsBetweenMonths m1 m2 =
-     0
-    -- Debug.todo "Implement Date.monthsBetweenMonths"
+     abs(monthToInt m1 - monthToInt m2)
