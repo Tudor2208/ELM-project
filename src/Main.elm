@@ -33,9 +33,14 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( initModel
-    , Cmd.none
+    , getRepos
     )
 
+getRepos : Cmd Msg
+getRepos = Http.get 
+    { url = "https://api.github.com/users/Tudor2208/repos"
+    , expect = Http.expectJson GotRepos (De.list Repo.decodeRepo) 
+    }
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -48,8 +53,10 @@ update msg model =
         GetRepos ->
             ( model, Cmd.none )
 
-        GotRepos res ->
-            ( model, Cmd.none )
+        GotRepos (Ok res) ->
+            ( {model | repos = res}, Cmd.none )
+        GotRepos (Err err) ->
+            ( model , Cmd.none )
 
         SelectEventCategory category ->
             ( model, Cmd.none )

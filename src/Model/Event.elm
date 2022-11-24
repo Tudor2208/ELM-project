@@ -31,17 +31,10 @@ categoryView category =
         Award ->
             text "Award"
 
-sortByWith : (a -> Interval) -> (Interval -> Interval -> Order) -> List a -> List a
-sortByWith accessor sortFunc list =
-    List.sortWith (orderBy accessor sortFunc) list
-
-orderBy : (a -> Interval) -> (Interval -> Interval -> Order) -> a -> a -> Order
-orderBy accessor orderFunc a b =
-        orderFunc (accessor a) (accessor b)
 
 sortByInterval : List Event -> List Event
-sortByInterval events = 
-    sortByWith .interval Interval.compare events
+sortByInterval events =
+        List.sortWith (\a -> \b -> Interval.compare a.interval b.interval) events
     
 
 view : Event -> Html Never

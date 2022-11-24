@@ -16,14 +16,29 @@ type alias Repo =
 
 view : Repo -> Html msg
 view repo =
-     div [] []
-    -- Debug.todo "Implement Model.Repo.view"
+    div [class "repo"] [
+      h2[class "repo-name"] [text repo.name],
+
+      div[class "repo-description"][
+        case repo.description of
+          Just s -> text s
+          Nothing -> text ""
+      ],
+      
+      div[class "repo-url"] [
+          a[href repo.url][text "Link"]     
+      ],
+
+      div[class "repo-stars"][text (String.fromInt repo.stars)]
+
+    ]
+    
 
 
 sortByStars : List Repo -> List Repo
 sortByStars repos =
-     []
-    -- Debug.todo "Implement Model.Repo.sortByStars"
+    List.sortWith (\a -> \b -> compare a.stars b.stars) repos
+    
 
 
 {-| Deserializes a JSON object to a `Repo`.
@@ -38,5 +53,11 @@ Field mapping (JSON -> Elm):
 -}
 decodeRepo : De.Decoder Repo
 decodeRepo =
-     De.fail "Not implemented"
-    -- Debug.todo "Implement Model.Repo.decodeRepo"
+    De.map5 Repo
+      (De.field "name" De.string)
+      (De.maybe(De.field "description" De.string))
+      (De.field "html_url" De.string)
+      (De.field "pushed_at" De.string)
+      (De.field "stargazers_count" De.int)
+
+    
