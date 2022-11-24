@@ -19,7 +19,7 @@ eventCategories =
 {-| Type used to represent the state of the selected event categories
 -}
 type SelectedEventCategories
-    = TODOCompleteThisType
+    = SelectedEventCategories {academic: Bool, work: Bool, project: Bool, award: Bool}
 
 
 {-| Returns an instance of `SelectedEventCategories` with all categories selected
@@ -28,9 +28,8 @@ type SelectedEventCategories
 
 -}
 allSelected : SelectedEventCategories
-allSelected = 
-     TODOCompleteThisType
-    -- Debug.todo "Implement Model.Event.Category.allSelected"
+allSelected = SelectedEventCategories {academic = True, work = True, project = True, award = True}
+     
 
 {-| Returns an instance of `SelectedEventCategories` with no categories selected
 
@@ -38,8 +37,8 @@ allSelected =
 
 -}
 noneSelected : SelectedEventCategories
-noneSelected =
-     TODOCompleteThisType
+noneSelected = SelectedEventCategories {academic = False, work = False, project = False, award = False}
+    -- TODOCompleteThisType
     -- Debug.todo "Implement Model.Event.Category.noneSelected"
 
 {-| Given a the current state and a `category` it returns whether the `category` is selected.
@@ -48,10 +47,12 @@ noneSelected =
 
 -}
 isEventCategorySelected : EventCategory -> SelectedEventCategories -> Bool
-isEventCategorySelected category current = 
-     True
-    -- Debug.todo "Implement Model.Event.Category.isEventCategorySelected"
-
+isEventCategorySelected category (SelectedEventCategories {academic, work, project, award}) =
+    case category of 
+        Academic -> academic
+        Work -> work
+        Project -> project
+        Award -> award
 
 {-| Given an `category`, a boolean `value` and the current state, it sets the given `category` in `current` to `value`.
 
@@ -61,10 +62,12 @@ isEventCategorySelected category current =
 
 -}
 set : EventCategory -> Bool -> SelectedEventCategories -> SelectedEventCategories
-set category value current =
-     current
-    -- Debug.todo "Implement Model.Event.Category.set"
-
+set category value (SelectedEventCategories {academic, work, project, award}) =
+    case category of
+        Academic -> SelectedEventCategories {academic = value, work = work, project = project, award = award}
+        Work -> SelectedEventCategories {academic = academic, work = value, project = project, award = award}
+        Project -> SelectedEventCategories {academic = academic, work = work, project = value, award = award}
+        Award -> SelectedEventCategories {academic = academic, work = work, project = project, award = value}
 
 checkbox : String -> Bool -> EventCategory -> Html ( EventCategory, Bool )
 checkbox name state category =
@@ -76,5 +79,10 @@ checkbox name state category =
 
 view : SelectedEventCategories -> Html ( EventCategory, Bool )
 view model =
-     div [] []
-    -- Debug.todo "Implement the Model.Event.Category.view function"
+    div [] [
+        checkbox "Academic" (isEventCategorySelected Academic model) Academic,
+        checkbox "Work" (isEventCategorySelected Work model) Work,
+        checkbox "Project" (isEventCategorySelected Project model) Project,
+        checkbox "Award" (isEventCategorySelected Award model) Award
+    ]
+    
