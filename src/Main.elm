@@ -95,7 +95,7 @@ view model =
                 |> div []
     in
     div []
-        [ PersonalDetails.view model.personalDetails
+        [ model.personalDetails |> PersonalDetails.view 
         , h2 [] [ text "Experience" ]
         , eventCategoriesView
         , eventsView

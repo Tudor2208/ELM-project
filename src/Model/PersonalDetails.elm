@@ -37,9 +37,9 @@ view : PersonalDetails -> Html msg
 view details =
    
     div [] [
-        h1 [id "name"] [text details.name],
-        em [id "intro"] [text details.intro],
-        ul [] (createUnorderedList createContactListItem details.contacts),
-        ul [] (createUnorderedList createSocialListItem details.socials)
+        h1 [id "name"] [text <| details.name],
+        em [id "intro"] [text <| details.intro],
+        ul [] (createUnorderedList createContactListItem <| details.contacts),
+        ul [] (createUnorderedList createSocialListItem <| details.socials)
     ]
     

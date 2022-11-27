@@ -118,9 +118,6 @@ compare (Interval intA) (Interval intB) =
                             Nothing -> EQ
 
 
-    
-
-
 view : Interval -> Html msg
 view (Interval interval) =
      div [class "interval"] [

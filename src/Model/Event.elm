@@ -34,7 +34,7 @@ categoryView category =
 
 sortByInterval : List Event -> List Event
 sortByInterval events =
-        List.sortWith (\a -> \b -> Interval.compare a.interval b.interval) events
+        List.sortWith (\a b -> Interval.compare a.interval b.interval) events
     
 
 view : Event -> Html Never
@@ -47,9 +47,9 @@ view event =
 
             case event.url of
                 Just str -> div[class "event-url"] [text str]
-                Nothing -> div[class "event-url"] []
+                Nothing -> div[class "event-url"] [],
 
-            ,div [class "event-interval"] [Interval.view event.interval]       
+            div [class "event-interval"] [Interval.view event.interval]       
      ]
 
      else

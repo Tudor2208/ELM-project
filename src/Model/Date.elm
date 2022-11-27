@@ -58,7 +58,6 @@ monthsBetween dA dB =
      let
         yearA = year dA
         monthA = month dA
-
         yearB = year dB
         monthB = month dB
     in
@@ -73,7 +72,6 @@ monthsBetween dA dB =
                             Just(monthToInt m2 - monthToInt m1 + (yearB - yearA) * 12) 
                         else
                             Just(monthToInt m1 - monthToInt m2 + (yearA - yearB) * 12 )
-
                     Nothing -> Nothing
 
             Nothing ->  
@@ -106,7 +104,6 @@ compare (Date d1) (Date d2) =
     let
         year1 = d1.year
         month1 = d1.month
-
         year2 = d2.year
         month2 = d2.month
     in 
